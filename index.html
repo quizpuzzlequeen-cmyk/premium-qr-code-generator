@@ -1,263 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Studio - Premium QR Generator</title>
+    <title>QR Code Studio - Premium Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <style>
-        /* प्रिव्यू कंटेनर को हमेशा परफेक्ट चौकोर और रिस्पॉन्सिव रखने के लिए */
-        #qrcode-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-        /* कैनवस को डिब्बे के अंदर सुंदर मार्जिन के साथ फिट करने के लिए */
-        #qrcode-container canvas {
-            max-width: 100% !important;
-            max-height: 100% !important;
-            object-fit: contain;
-            border-radius: 12px;
+        /* Fix for Mobile Desktop Mode & General Layout Visual Balance */
+        @media (min-width: 768px) and (min-height: 600px) {
+            .desktop-center {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-h-screen;
+            }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen"></body>
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md shadow-indigo-100">
-                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
-                    </svg>
-                </div>
-                <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-slate-900">QR Code <span class="text-indigo-600">Studio</span></span>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md shadow-indigo-100 font-black text-xs sm:text-sm tracking-wider">QR</div>
+                <span class="font-bold text-slate-900 tracking-tight text-base sm:text-lg">QR Code <span class="text-indigo-600 font-extrabold">Studio</span></span>
             </div>
-            
-            <div class="flex items-center gap-3 sm:gap-5 shrink-0">
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Ready
-                </span>
-                <a href="#features" class="text-sm sm:text-base font-semibold text-slate-600 hover:text-indigo-600 transition scroll-smooth">Features</a>
-            </div>
+            <nav class="flex items-center gap-4 sm:gap-6">
+                <a href="#features" class="text-sm sm:text-base font-semibold text-slate-600 hover:text-indigo-600 transition">Features</a>
+                <span class="text-slate-200">|</span>
+                <span class="bg-indigo-50 text-indigo-700 font-bold px-2.5 py-1 rounded-lg text-xs tracking-wide uppercase border border-indigo-100/50">v1.0.0</span>
+            </nav>
         </div>
     </header>
-     
-        <main class="max-w-6xl w-full mx-auto px-4 py-8 sm:py-16"></main>  
-        <div class="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10"></div>
-            <div class="space-y-5 sm:space-y-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Customize Your QR Code</h2>
-                    <p class="text-sm sm:text-base text-slate-500">Fill in the details below to generate a unique high-quality QR.</p>
-                </div>
 
-                <div class="space-y-2">
-                    <label class="block text-sm sm:text-base font-bold text-slate-800 tracking-wide">Enter URL or Text</label>
-                    <input type="text" id="qr-text" value="https://google.com" placeholder="https://example.com" 
-                           class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm sm:text-base font-medium bg-slate-50/50">
-                </div>
-
-                <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-4 sm:space-y-5">
-                    <h3 class="font-extrabold text-[10px] sm:text-xs text-slate-400 uppercase tracking-widest mb-1 tracking-tight">🎨 Design & Styling</h3>
-                    
-                    <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
-                        <label class="text-sm sm:text-base text-slate-800 font-bold">QR Code Color</label>
-                        <input type="color" id="qr-color" value="#4f46e5" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl cursor-pointer border-2 border-slate-200 p-0 overflow-hidden shadow-sm">
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-sm sm:text-base text-slate-800 font-bold block">Dots Style</label>
-                        <select id="dots-type" class="w-full bg-white px-3 py-2.5 sm:py-3 rounded-xl border-2 border-slate-200 text-sm sm:text-base font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm cursor-pointer">
-                            <option value="rounded">Rounded (Premium)</option>
-                            <option value="dots">Circular Dots</option>
-                            <option value="square">Classic Square</option>
-                            <option value="extra-rounded">Extra Rounded</option>
-                        </select>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-sm sm:text-base text-slate-800 font-bold block">Corner Squares Style</label>
-                        <select id="corners-type" class="w-full bg-white px-3 py-2.5 sm:py-3 rounded-xl border-2 border-slate-200 text-sm sm:text-base font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm cursor-pointer">
-                            <option value="square">Classic Square</option>
-                            <option value="dot">Rounded Corner</option>
-                            <option value="extra-rounded">Extra Rounded Corner</option>
-                        </select>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-sm sm:text-base text-slate-800 font-bold block">Add Center Logo (Optional)</label>
-                        <input type="file" id="logo-file" accept="image/*" class="w-full text-xs sm:text-sm text-slate-500 file:mr-3 sm:file:mr-4 file:py-2 file:px-3 sm:file:py-2.5 sm:file:px-5 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col items-center justify-center bg-slate-50/50 rounded-2xl p-5 sm:p-8 border border-slate-100 shrink-0">
-                <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-slate-400 mb-4 sm:mb-5">Live Preview</span>
+    <div class="flex-grow flex flex-col justify-start md:justify-center py-6 sm:py-12">
+        <main class="max-w-6xl w-full mx-auto px-4">
+            
+            <div class="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
                 
-                <div class="bg-white rounded-2xl shadow-md border-2 border-slate-200/60 flex items-center justify-center w-52 h-52 sm:w-64 sm:h-64 p-4 mb-6 sm:mb-8 overflow-hidden relative">
-                    <div id="qrcode-container"></div>
+                <div class="space-y-5 sm:space-y-6">
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Create Premium QR Code</h1>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Customize styles, colors, and embed your brand logo instantly.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-xs sm:text-sm font-bold text-slate-700 tracking-wide uppercase">QR Code Content</label>
+                        <input type="text" id="qr-text" value="https://google.com" placeholder="Enter URL or Text here..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-slate-800 placeholder-slate-400 font-medium transition text-sm sm:text-base shadow-inner">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700 tracking-wide uppercase">Dots Color</label>
+                            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-2 rounded-xl shadow-inner">
+                                <input type="color" id="dots-color" value="#4f46e5" class="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent">
+                                <span id="dots-color-text" class="text-xs font-mono font-bold text-slate-500 uppercase">#4f46e5</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700 tracking-wide uppercase">Background</label>
+                            <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-2 rounded-xl shadow-inner">
+                                <input type="color" id="bg-color" value="#ffffff" class="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent">
+                                <span id="bg-color-text" class="text-xs font-mono font-bold text-slate-500 uppercase">#ffffff</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700 tracking-wide uppercase">Dots Style</label>
+                            <select id="dots-type" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-700 font-medium text-xs sm:text-sm shadow-sm">
+                                <option value="rounded">Rounded Dots</option>
+                                <option value="dots">Fine Dots</option>
+                                <option value="classy">Classy Style</option>
+                                <option value="classy-rounded">Classy Rounded</option>
+                                <option value="square" selected>Standard Square</option>
+                                <option value="extra-rounded">Extra Rounded</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700 tracking-wide uppercase">Corner Style</label>
+                            <select id="corners-type" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-700 font-medium text-xs sm:text-sm shadow-sm">
+                                <option value="square" selected>Square Box</option>
+                                <option value="dot">Circular Dot</option>
+                                <option value="extra-rounded">Smooth Rounded</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-xs sm:text-sm font-bold text-slate-700 tracking-wide uppercase">Center Logo (Optional)</label>
+                        <div class="relative flex items-center justify-center border-2 border-dashed border-slate-200 hover:border-indigo-500 rounded-xl p-3 bg-slate-50/50 transition group cursor-pointer shadow-inner">
+                            <input type="file" id="logo-file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                            <div class="text-center flex items-center gap-2">
+                                <span class="text-lg group-hover:scale-110 transition duration-300">🖼️</span>
+                                <span id="logo-name" class="text-xs sm:text-sm font-semibold text-slate-500 group-hover:text-indigo-600 transition">Upload Brand Logo Image</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="w-full space-y-3 sm:space-y-4">
-                    <button id="generate-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm sm:text-base py-3 sm:py-3.5 px-6 rounded-xl transition duration-200 shadow-lg shadow-indigo-100 cursor-pointer font-bold tracking-wide">
-                        Generate & Update QR Code
-                    </button>
+                <div class="bg-slate-50/50 border border-slate-100 rounded-2xl p-5 sm:p-8 flex flex-col items-center justify-center text-center shadow-inner relative">
+                    <div id="canvas-container" class="bg-white p-4 rounded-2xl shadow-md border border-slate-200/60 max-w-full inline-block transition-transform duration-300 hover:scale-[1.02]">
+                        </div>
 
-                    <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                        <button id="download-png-btn" class="bg-white border-2 border-slate-200 hover:bg-slate-100 text-slate-700 font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition duration-200 text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-sm">
-                            <svg class="w-4 h-4 text-slate-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            <span class="hidden sm:inline">Download </span>PNG
+                    <div class="w-full grid grid-cols-2 gap-3 mt-6 sm:mt-8">
+                        <button id="download-png" class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/10 active:scale-[0.98] transition text-xs sm:text-sm">
+                            📥 Download PNG
                         </button>
-                        <button id="download-svg-btn" class="bg-white border-2 border-slate-200 hover:bg-slate-100 text-slate-700 font-bold py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl transition duration-200 text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-sm">
-                            <svg class="w-4 h-4 text-slate-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            <span class="hidden sm:inline">Download </span>SVG
+                        <button id="download-svg" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-slate-900/10 active:scale-[0.98] transition text-xs sm:text-sm">
+                            📐 Vector SVG
                         </button>
                     </div>
                 </div>
+
             </div>
 
-        </div>
-        <section id="features" class="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-6 border-t border-slate-100">
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex gap-4 items-start">
-                <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl text-lg sm:text-xl shrink-0">🚀</div>
-                <div>
-                    <h4 class="font-bold text-slate-900 text-sm sm:text-base mb-1">Instant Generation</h4>
-                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">No database or server required. Generates fully on client-side within milliseconds.</p>
+            <section id="features" class="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-6 border-t border-slate-100">
+                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex gap-4 items-start">
+                    <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl text-lg sm:text-xl shrink-0">🚀</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm sm:text-base mb-1">Instant Generation</h4>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">No database or server required. Generates fully on client-side within milliseconds.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex gap-4 items-start">
-                <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl text-lg sm:text-xl shrink-0">🎨</div>
-                <div>
-                    <h4 class="font-bold text-slate-900 text-sm sm:text-base mb-1">Highly Customizable</h4>
-                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">Change custom dot styles, corner shapes, colors, and embed custom logos easily.</p>
+                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex gap-4 items-start">
+                    <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl text-lg sm:text-xl shrink-0">🎨</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm sm:text-base mb-1">Highly Customizable</h4>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">Change custom dot styles, corner shapes, colors, and embed custom logos easily.</p>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex gap-4 items-start">
-                <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl text-lg sm:text-xl shrink-0">📐</div>
-                <div>
-                    <h4 class="font-bold text-slate-900 text-sm sm:text-base mb-1">Vector SVG Exports</h4>
-                    <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">Download in standard PNG or high-resolution vector SVG format for flawless printing.</p>
+                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex gap-4 items-start">
+                    <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl text-lg sm:text-xl shrink-0">📐</div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm sm:text-base mb-1">Vector SVG Exports</h4>
+                        <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">Download in standard PNG or high-resolution vector SVG format for flawless printing.</p>
+                    </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
 
-    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs sm:text-sm text-slate-500">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-            <p>&copy; 2026 QR Code Studio. All rights reserved.</p>
-            <p class="font-medium">Crafted with ❤️ for CodeCanyon</p>
-        </div>
+        </main>
+    </div>
+
+    <footer class="bg-white border-t border-slate-100 py-4 mt-auto">
+        <p class="text-center text-xs text-slate-400 font-medium">© 2026 QR Code Studio. Premium Quality Tool.</p>
     </footer>
 
-    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-    
     <script>
-        let uploadedLogo = "";
-        let qrCodeInstance = null;
-        const container = document.getElementById("qrcode-container");
+        let qrCode;
+        let uploadedLogoUrl = "";
 
-        // स्क्रीन साइज के हिसाब से परफेक्ट पिक्सल साइज तय करने का फंक्शन
-        function getOptimalQRSize() {
-            return window.innerWidth < 640 ? 200 : 260;
+        const elText = document.getElementById("qr-text");
+        const elDotsColor = document.getElementById("dots-color");
+        const elBgColor = document.getElementById("bg-color");
+        const elDotsType = document.getElementById("dots-type");
+        const elCornersType = document.getElementById("corners-type");
+        const elLogoFile = document.getElementById("logo-file");
+        const elLogoName = document.getElementById("logo-name");
+
+        const elDotsText = document.getElementById("dots-color-text");
+        const elBgText = document.getElementById("bg-color-text");
+
+        function initQR() {
+            qrCode = new QRCodeStyling({
+                width: 260,
+                height: 260,
+                type: "canvas",
+                data: elText.value,
+                image: uploadedLogoUrl,
+                dotsOptions: { color: elDotsColor.value, type: elDotsType.value },
+                backgroundOptions: { color: elBgColor.value },
+                cornersSquareOptions: { type: elCornersType.value },
+                imageOptions: { crossOrigin: "anonymous", hideBackgroundDots: true, imageSize: 0.4, margin: 4 }
+            });
+
+            const container = document.getElementById("canvas-container");
+            container.innerHTML = "";
+            qrCode.append(container);
         }
 
-        // फ्रेश क्यूआर कोड बनाने का फंक्शन (Canvas रेंडरर के साथ ताकि लोगो परफेक्ट दिखे)
-        function createFreshQRCode(text, color, dotsStyle, cornersStyle, logoBase64) {
-            const dynamicSize = getOptimalQRSize();
-            return new QRCodeStyling({
-                width: dynamicSize,
-                height: dynamicSize,
-                type: "canvas", // CANVAS ही इमेज की रेंडरिंग गड़बड़ को बिल्कुल ठीक करता है
-                data: text || "https://google.com",
-                margin: 5, // शानदार अंदरूनी संतुलन
-                dotsOptions: { color: color || "#4f46e5", type: dotsStyle || "rounded" },
-                backgroundOptions: { color: "#ffffff" },
-                cornersSquareOptions: { color: color || "#4f46e5", type: cornersStyle || "square" },
-                cornersDotOptions: { color: color || "#4f46e5" },
-                image: logoBase64 || "",
-                imageOptions: { 
-                    crossOrigin: "anonymous", 
-                    hideBackgroundDots: true, 
-                    imageSize: 0.3, // परफेक्ट लोगो रेशियो ताकि कोई ओवरलैपिंग न हो
-                    margin: 5 
-                }
+        function updateQR() {
+            elDotsText.innerText = elDotsColor.value;
+            elBgText.innerText = elBgColor.value;
+
+            qrCode.update({
+                data: elText.value,
+                image: uploadedLogoUrl,
+                dotsOptions: { color: elDotsColor.value, type: elDotsType.value },
+                backgroundOptions: { color: elBgColor.value },
+                cornersSquareOptions: { type: elCornersType.value }
             });
         }
 
-        // इमेज को परफेक्ट 1:1 चौकोर अनुपात में क्रॉप करने का हेल्पर फंक्शन
-        function getProcessedSquareLogo(base64Source) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const size = Math.min(img.width, img.height);
-                    canvas.width = size;
-                    canvas.height = size;
-                    
-                    ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, size, size);
-                    resolve(canvas.toDataURL('image/png'));
-                };
-                img.src = base64Source;
-            });
-        }
+        // Event Listeners
+        elText.addEventListener("input", updateQR);
+        elDotsColor.addEventListener("input", updateQR);
+        elBgColor.addEventListener("input", updateQR);
+        elDotsType.addEventListener("change", updateQR);
+        elCornersType.addEventListener("change", updateQR);
 
-        // डिफ़ॉल्ट रूप से पहली बार रेंडर करना
-        window.addEventListener("DOMContentLoaded", () => {
-            qrCodeInstance = createFreshQRCode();
-            qrCodeInstance.append(container);
-        });
-
-        // "Generate & Update" बटन का लॉजिक - पुराना सब डिलीट करके फ्रेश इंजन रीस्टार्ट करना
-        document.getElementById("generate-btn").addEventListener("click", async () => {
-            const textInput = document.getElementById("qr-text").value.trim();
-            const selectedColor = document.getElementById("qr-color").value;
-            const selectedDots = document.getElementById("dots-type").value;
-            const selectedCorners = document.getElementById("corners-type").value;
-
-            if (textInput === "") {
-                alert("Please enter some text or a URL first!");
-                return;
-            }
-
-            container.innerHTML = ""; // पुराना डोम (DOM) एकदम साफ
-            
-            // नया फ्रेश इंजन इनिशियलाइज़ करना
-            qrCodeInstance = createFreshQRCode(textInput, selectedColor, selectedDots, selectedCorners, uploadedLogo);
-            qrCodeInstance.append(container);
-        });
-
-        // लोगो अपलोड हैंडलर
-        document.getElementById("logo-file").addEventListener("change", (e) => {
+        elLogoFile.addEventListener("change", function(e) {
             const file = e.target.files[0];
             if (file) {
+                elLogoName.innerText = file.name;
                 const reader = new FileReader();
-                reader.onload = async function(event) {
-                    const squaredBase64 = await getProcessedSquareLogo(event.target.result);
-                    
-                    // इमेज लोड कन्फर्मेशन
-                    const logoImg = new Image();
-                    logoImg.src = squaredBase64;
-                    if (logoImg.decode) {
-                        await logoImg.decode().catch(() => {});
-                    }
-                    
-                    uploadedLogo = squaredBase64;
+                reader.onload = function(event) {
+                    uploadedLogoUrl = event.target.result;
+                    updateQR();
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // डाउनलोड बटन्स
-        document.getElementById("download-png-btn").addEventListener("click", () => {
-            if(qrCodeInstance) qrCodeInstance.download({ name: "premium-qrcode", extension: "png" });
-        });
+        document.getElementById("download-png").addEventListener("click", () => qrCode.download({ name: "premium-qr-code", extension: "png" }));
+        document.getElementById("download-svg").addEventListener("click", () => qrCode.download({ name: "premium-qr-code", extension: "svg" }));
 
-        document.getElementById("download-svg-btn").addEventListener("click", () => {
-            if(qrCodeInstance) qrCodeInstance.download({ name: "premium-qrcode", extension: "svg" });
-        });
+        // Initial Boot
+        window.onload = initQR;
     </script>
-
 </body>
 </html>
